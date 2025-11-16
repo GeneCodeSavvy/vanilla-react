@@ -1,5 +1,6 @@
 interface BaseProps {
     children?: ReactlessChild[];
+    key?: string | number;
 }
 
 interface ElementAttributes {
@@ -15,6 +16,7 @@ interface TextElementProps extends BaseProps {
 interface ReactlessElement {
     type: string;
     props: PropsObject;
+    key?: string | number;
 }
 
 type ElementProps = Partial<ElementAttributes> & BaseProps;
@@ -25,7 +27,6 @@ type TextChild = string | number;
 
 type ReactlessChild = ReactlessElement | TextChild;
 
-
 type FiberNode = {
     type: string | undefined;
     dom: Node | null;
@@ -33,4 +34,7 @@ type FiberNode = {
     child: FiberNode | null;
     sibling: FiberNode | null;
     props: PropsObject;
+    effectTag: "UPDATE" | "PLACEMENT" | "DELETION" | "";
+    alternate: FiberNode | null;
+    key?: string | number;
 }
