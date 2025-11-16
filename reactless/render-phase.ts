@@ -39,10 +39,7 @@ function reconcileChildren(wipFiber: FiberNode, elements: ReactlessElement[]) {
     const matchedOldFibers = new Set<FiberNode>();
 
     // First pass: handle elements with keys
-    for (let i = 0; i < elements.length; i++) {
-        const element = elements[i];
-        if (!element) continue;
-        
+    elements.forEach((element, index) => {
         let newFiber: FiberNode | null = null;
         let matchedOldFiber: FiberNode | null = null;
 
@@ -53,7 +50,7 @@ function reconcileChildren(wipFiber: FiberNode, elements: ReactlessElement[]) {
             // For elements without keys, try positional matching
             let tempFiber = oldFiber;
             let tempIndex = 0;
-            while (tempFiber && tempIndex < i) {
+            while (tempFiber && tempIndex < index) {
                 tempFiber = tempFiber.sibling;
                 tempIndex++;
             }
@@ -65,7 +62,6 @@ function reconcileChildren(wipFiber: FiberNode, elements: ReactlessElement[]) {
         const sameType = matchedOldFiber && element.type === matchedOldFiber.type;
 
         if (sameType && matchedOldFiber) {
-            // Update existing fiber
             newFiber = {
                 type: matchedOldFiber.type,
                 dom: matchedOldFiber.dom,
@@ -79,7 +75,6 @@ function reconcileChildren(wipFiber: FiberNode, elements: ReactlessElement[]) {
             };
             matchedOldFibers.add(matchedOldFiber);
         } else {
-            // Create new fiber
             newFiber = {
                 type: element.type,
                 dom: null,
@@ -91,8 +86,7 @@ function reconcileChildren(wipFiber: FiberNode, elements: ReactlessElement[]) {
                 effectTag: "PLACEMENT",
                 key: element.key,
             };
-            
-            // If we had a matched fiber but different type, mark it for deletion
+
             if (matchedOldFiber) {
                 matchedOldFiber.effectTag = "DELETION";
                 deletions.push(matchedOldFiber);
@@ -101,7 +95,7 @@ function reconcileChildren(wipFiber: FiberNode, elements: ReactlessElement[]) {
         }
 
         // Link the fiber into the tree
-        if (i === 0) {
+        if (index === 0) {
             wipFiber.child = newFiber;
         } else if (prevSibling && newFiber) {
             prevSibling.sibling = newFiber;
@@ -110,7 +104,7 @@ function reconcileChildren(wipFiber: FiberNode, elements: ReactlessElement[]) {
         if (newFiber) {
             prevSibling = newFiber;
         }
-    }
+    })
 
     // Second pass: mark remaining old fibers for deletion
     let tempFiber = oldFiber;

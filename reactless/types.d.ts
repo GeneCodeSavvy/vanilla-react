@@ -1,6 +1,5 @@
 interface BaseProps {
     children?: ReactlessChild[];
-    key?: string | number;
 }
 
 interface ElementAttributes {
@@ -16,7 +15,6 @@ interface TextElementProps extends BaseProps {
 interface ReactlessElement {
     type: string;
     props: PropsObject;
-    key?: string | number;
 }
 
 type ElementProps = Partial<ElementAttributes> & BaseProps;
