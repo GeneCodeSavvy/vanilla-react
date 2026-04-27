@@ -11,18 +11,22 @@ function createTextElement(text: TextChild): ReactlessElement {
 }
 
 export function createElement(
-    type: string,
-    props: PropsObject = {},
+    type: ElementType,
+    props: (PropsObject & { key?: string | number }) = {},
     ...children: ReactlessChild[]
 ): ReactlessElement {
+    // just flattens the children with depth one, and creates a Text Element for text values, and ReactlessElement for others
     const normalizedChildren = children
         .flat()
         .map(child => typeof child === 'object' ? child as ReactlessElement : createTextElement(child));
 
+    const { key, ...rest } = (props || {}) as PropsObject & { key?: string | number };
+
     return {
         type,
+        key,
         props: {
-            ...(props || {}),
+            ...rest,
             children: normalizedChildren as ReactlessElement[]
         }
     } as ReactlessElement;

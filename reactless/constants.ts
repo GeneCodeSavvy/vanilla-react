@@ -1,1 +1,1 @@
-export const TEXT_ELEMENT = 'TEXT_ELEMENT';
+export const TEXT_ELEMENT = 'TEXT_ELEMENT' as const;

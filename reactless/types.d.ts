@@ -1,5 +1,15 @@
+type HTMLTag = keyof HTMLElementTagNameMap;
+type ElementType = HTMLTag | "TEXT_ELEMENT";
+
+type TextChild = string | number;
+type ReactlessChild = ReactlessElement | TextChild;
+
 interface BaseProps {
     children?: ReactlessChild[];
+}
+
+interface TextElementProps extends BaseProps {
+    nodeValue: string;
 }
 
 interface ElementAttributes {
@@ -8,25 +18,17 @@ interface ElementAttributes {
     className: string;
 }
 
-interface TextElementProps extends BaseProps {
-    nodeValue: string;
-}
-
-interface ReactlessElement {
-    type: string;
-    props: PropsObject;
-}
-
 type ElementProps = Partial<ElementAttributes> & BaseProps;
-
 type PropsObject = ElementProps | TextElementProps;
 
-type TextChild = string | number;
-
-type ReactlessChild = ReactlessElement | TextChild;
+interface ReactlessElement {
+    type: ElementType;
+    props: PropsObject;
+    key?: string | number;
+}
 
 type FiberNode = {
-    type: string | undefined;
+    type: ElementType | undefined;
     dom: Node | null;
     parent: FiberNode | null;
     child: FiberNode | null;
